@@ -81,5 +81,6 @@ See [full.rs example](https://github.com/vleue/bevy_ninepatch/blob/main/examples
 |Bevy|bevy_ninepatch|
 |---|---|
 |main|main|
+|0.7|0.7|
 |0.6|0.6|
 |0.5|0.5|

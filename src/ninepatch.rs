@@ -2,10 +2,10 @@ use bevy::prelude::*;
 use bevy::render::render_resource::{Extent3d, TextureDimension, TextureFormat};
 use bevy::{
     asset::{Assets, Handle},
+    hierarchy::BuildChildren,
     math::{Rect, Size},
     reflect::TypeUuid,
     render::color::Color,
-    transform::hierarchy::BuildChildren,
     ui::{
         entity::{ImageBundle, NodeBundle},
         AlignContent, FlexDirection, FocusPolicy, Style, Val,
