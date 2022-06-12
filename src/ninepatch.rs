@@ -3,7 +3,6 @@ use bevy::render::render_resource::{Extent3d, TextureDimension, TextureFormat};
 use bevy::{
     asset::{Assets, Handle},
     hierarchy::BuildChildren,
-    math::{Rect, Size},
     reflect::TypeUuid,
     render::color::Color,
     ui::{
@@ -292,7 +291,7 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatch<T> {
                         align_content: AlignContent::Stretch,
                         flex_grow: growth,
                         flex_shrink: growth,
-                        margin: Rect::all(Val::Px(0.)),
+                        margin: UiRect::all(Val::Px(0.)),
                         ..Default::default()
                     },
                     color: UiColor(Color::NONE),
@@ -323,7 +322,7 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatch<T> {
                         image: UiImage(self.splitted_texture[n].clone_weak()),
                         style: Style {
                             size: Size::new(size_width, size_height),
-                            margin: Rect::all(Val::Px(0.)),
+                            margin: UiRect::all(Val::Px(0.)),
                             flex_grow: growth,
                             flex_shrink: growth,
                             ..Default::default()

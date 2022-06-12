@@ -30,7 +30,7 @@ fn setup(
         // of this entity
         NinePatchBundle {
             style: Style {
-                margin: Rect::all(Val::Auto),
+                margin: UiRect::all(Val::Auto),
                 justify_content: JustifyContent::Center,
                 align_items: AlignItems::Center,
                 size: Size::new(Val::Px(50.), Val::Px(50.)),

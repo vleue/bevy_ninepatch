@@ -31,7 +31,7 @@ fn setup(
             // of this entity
             NinePatchBundle {
                 style: Style {
-                    margin: Rect {
+                    margin: UiRect {
                         left: Val::Px(0.),
                         right: Val::Auto,
                         top: Val::Auto,
@@ -58,7 +58,7 @@ fn setup(
             // of this entity
             NinePatchBundle {
                 style: Style {
-                    margin: Rect {
+                    margin: UiRect {
                         left: Val::Px(0.),
                         right: Val::Auto,
                         top: Val::Auto,
@@ -105,7 +105,7 @@ fn set_content(
                     let content_entity = commands
                         .spawn_bundle(TextBundle {
                             style: Style {
-                                margin: Rect {
+                                margin: UiRect {
                                     left: Val::Px(50.),
                                     right: Val::Auto,
                                     top: Val::Auto,
@@ -132,7 +132,7 @@ fn set_content(
                     let content_entity = commands
                         .spawn_bundle(TextBundle {
                             style: Style {
-                                margin: Rect {
+                                margin: UiRect {
                                     left: Val::Px(50.),
                                     right: Val::Auto,
                                     top: Val::Auto,

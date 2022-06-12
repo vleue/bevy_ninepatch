@@ -113,7 +113,7 @@ fn setup(
             // of this entity
             NinePatchBundle {
                 style: Style {
-                    margin: Rect::all(Val::Auto),
+                    margin: UiRect::all(Val::Auto),
                     justify_content: JustifyContent::Center,
                     align_items: AlignItems::Center,
                     size: Size::new(Val::Px(900.), Val::Px(600.)),
@@ -165,7 +165,7 @@ fn set_content(
                             // of this entity
                             NinePatchBundle {
                                 style: Style {
-                                    margin: Rect::all(Val::Auto),
+                                    margin: UiRect::all(Val::Auto),
                                     justify_content: JustifyContent::Center,
                                     align_items: AlignItems::Center,
                                     size: Size::new(Val::Px(850.), Val::Px(550.)),
@@ -188,7 +188,7 @@ fn set_content(
                     let content_entity = commands
                         .spawn_bundle(TextBundle {
                             style: Style {
-                                margin: Rect {
+                                margin: UiRect {
                                     left: Val::Undefined,
                                     right: Val::Auto,
                                     top: Val::Auto,
@@ -197,7 +197,7 @@ fn set_content(
                                 ..Default::default()
                             },
                             text: Text::with_section(
-                                "Example Title",
+                                "Example   Title",
                                 TextStyle {
                                     font: font.clone(),
                                     font_size: 25.0,
@@ -224,7 +224,7 @@ fn set_content(
                             // of this entity
                             NinePatchBundle {
                                 style: Style {
-                                    margin: Rect {
+                                    margin: UiRect {
                                         left: Val::Px(0.),
                                         right: Val::Auto,
                                         top: Val::Auto,
@@ -253,7 +253,7 @@ fn set_content(
                             // of this entity
                             NinePatchBundle {
                                 style: Style {
-                                    margin: Rect {
+                                    margin: UiRect {
                                         left: Val::Auto,
                                         right: Val::Px(0.),
                                         top: Val::Auto,
@@ -284,7 +284,7 @@ fn set_content(
                     let content_entity = commands
                         .spawn_bundle(TextBundle {
                             style: Style {
-                                margin: Rect {
+                                margin: UiRect {
                                     left: Val::Px(110.),
                                     right: Val::Auto,
                                     top: Val::Auto,
@@ -312,7 +312,7 @@ fn set_content(
                     let content_entity = commands
                         .spawn_bundle(TextBundle {
                             style: Style {
-                                margin: Rect {
+                                margin: UiRect {
                                     left: Val::Px(50.),
                                     right: Val::Auto,
                                     top: Val::Auto,

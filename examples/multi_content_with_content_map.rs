@@ -24,7 +24,7 @@ fn setup(
     let text_entity = commands
         .spawn_bundle(TextBundle {
             style: Style {
-                margin: Rect {
+                margin: UiRect {
                     left: Val::Px(60.),
                     right: Val::Auto,
                     top: Val::Auto,
@@ -59,7 +59,7 @@ fn setup(
             // of this entity
             NinePatchBundle {
                 style: Style {
-                    margin: Rect {
+                    margin: UiRect {
                         left: Val::Auto,
                         right: Val::Px(0.),
                         top: Val::Auto,
@@ -90,7 +90,7 @@ fn setup(
         // of this entity
         NinePatchBundle {
             style: Style {
-                margin: Rect::all(Val::Auto),
+                margin: UiRect::all(Val::Auto),
                 justify_content: JustifyContent::Center,
                 align_items: AlignItems::Center,
                 size: Size::new(Val::Px(500.), Val::Px(300.)),

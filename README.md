@@ -39,7 +39,7 @@ fn setup(
     commands.spawn_bundle(
         NinePatchBundle {
             style: Style {
-                margin: Rect::all(Val::Auto),
+                margin: UiRect::all(Val::Auto),
                 justify_content: JustifyContent::Center,
                 align_items: AlignItems::Center,
                 size: Size::new(Val::Px(500.), Val::Px(300.)),
