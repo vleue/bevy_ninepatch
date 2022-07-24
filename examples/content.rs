@@ -46,7 +46,7 @@ fn setup(
         },
     );
 
-    commands.spawn_bundle(UiCameraBundle::default());
+    commands.spawn_bundle(Camera2dBundle::default());
 }
 
 fn set_content(
@@ -60,18 +60,14 @@ fn set_content(
             let font = asset_server.load("Kenney Future Narrow.ttf");
 
             let content_entity = commands
-                .spawn_bundle(TextBundle {
-                    text: Text::with_section(
-                        "Hello!",
-                        TextStyle {
-                            font,
-                            font_size: 50.0,
-                            color: Color::GREEN,
-                        },
-                        TextAlignment::default(),
-                    ),
-                    ..Default::default()
-                })
+                .spawn_bundle(TextBundle::from_section(
+                    "Hello!",
+                    TextStyle {
+                        font,
+                        font_size: 50.0,
+                        color: Color::GREEN,
+                    },
+                ))
                 .id();
             commands.entity(entity).push_children(&[content_entity]);
             nine_patch_content.loaded = true;

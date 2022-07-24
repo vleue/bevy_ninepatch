@@ -22,8 +22,16 @@ fn setup(
     let font = asset_server.load("Kenney Future Narrow.ttf");
 
     let text_entity = commands
-        .spawn_bundle(TextBundle {
-            style: Style {
+        .spawn_bundle(
+            TextBundle::from_section(
+                "OK",
+                TextStyle {
+                    font: font.clone(),
+                    font_size: 50.0,
+                    color: Color::GREEN,
+                },
+            )
+            .with_style(Style {
                 margin: UiRect {
                     left: Val::Px(60.),
                     right: Val::Auto,
@@ -31,18 +39,8 @@ fn setup(
                     bottom: Val::Px(20.),
                 },
                 ..Default::default()
-            },
-            text: Text::with_section(
-                "OK",
-                TextStyle {
-                    font: font.clone(),
-                    font_size: 50.0,
-                    color: Color::GREEN,
-                },
-                TextAlignment::default(),
-            ),
-            ..Default::default()
-        })
+            }),
+        )
         .id();
 
     // prepare the button
@@ -106,5 +104,5 @@ fn setup(
         },
     );
 
-    commands.spawn_bundle(UiCameraBundle::default());
+    commands.spawn_bundle(Camera2dBundle::default());
 }

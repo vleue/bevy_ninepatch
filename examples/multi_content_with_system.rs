@@ -51,7 +51,7 @@ fn setup(
         },
     );
 
-    commands.spawn_bundle(UiCameraBundle::default());
+    commands.spawn_bundle(Camera2dBundle::default());
 }
 
 fn set_content(
@@ -104,8 +104,16 @@ fn set_content(
                     let font = asset_server.load("Kenney Future Narrow.ttf");
 
                     let content_entity = commands
-                        .spawn_bundle(TextBundle {
-                            style: Style {
+                        .spawn_bundle(
+                            TextBundle::from_section(
+                                "OK",
+                                TextStyle {
+                                    font: font.clone(),
+                                    font_size: 50.0,
+                                    color: Color::GREEN,
+                                },
+                            )
+                            .with_style(Style {
                                 margin: UiRect {
                                     left: Val::Px(60.),
                                     right: Val::Auto,
@@ -113,18 +121,8 @@ fn set_content(
                                     bottom: Val::Px(20.),
                                 },
                                 ..Default::default()
-                            },
-                            text: Text::with_section(
-                                "OK",
-                                TextStyle {
-                                    font: font.clone(),
-                                    font_size: 50.0,
-                                    color: Color::GREEN,
-                                },
-                                TextAlignment::default(),
-                            ),
-                            ..Default::default()
-                        })
+                            }),
+                        )
                         .id();
                     commands.entity(entity).push_children(&[content_entity]);
                     nine_patch_content.loaded = true;

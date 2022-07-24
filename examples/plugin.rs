@@ -43,5 +43,5 @@ fn setup(
         },
     );
 
-    commands.spawn_bundle(UiCameraBundle::default());
+    commands.spawn_bundle(Camera2dBundle::default());
 }

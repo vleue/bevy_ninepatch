@@ -19,7 +19,7 @@ fn setup(
     asset_server: Res<AssetServer>,
     mut nine_patches: ResMut<Assets<NinePatchBuilder<()>>>,
 ) {
-    commands.spawn_bundle(UiCameraBundle::default());
+    commands.spawn_bundle(Camera2dBundle::default());
 
     // prepare the button
     let button_texture_handle = asset_server.load("blue_button02.png");
@@ -103,35 +103,16 @@ fn set_content(
             {
                 PatchElement::ButtonOk => {
                     let content_entity = commands
-                        .spawn_bundle(TextBundle {
-                            style: Style {
-                                margin: UiRect {
-                                    left: Val::Px(50.),
-                                    right: Val::Auto,
-                                    top: Val::Auto,
-                                    bottom: Val::Px(10.),
-                                },
-                                ..Default::default()
-                            },
-                            text: Text::with_section(
+                        .spawn_bundle(
+                            TextBundle::from_section(
                                 "OK",
                                 TextStyle {
                                     font: font.clone(),
                                     font_size: 50.0,
                                     color: Color::GREEN,
                                 },
-                                TextAlignment::default(),
-                            ),
-                            ..Default::default()
-                        })
-                        .id();
-                    commands.entity(entity).push_children(&[content_entity]);
-                    nine_patch_content.loaded = true;
-                }
-                PatchElement::ButtonCancel => {
-                    let content_entity = commands
-                        .spawn_bundle(TextBundle {
-                            style: Style {
+                            )
+                            .with_style(Style {
                                 margin: UiRect {
                                     left: Val::Px(50.),
                                     right: Val::Auto,
@@ -139,18 +120,33 @@ fn set_content(
                                     bottom: Val::Px(10.),
                                 },
                                 ..Default::default()
-                            },
-                            text: Text::with_section(
+                            }),
+                        )
+                        .id();
+                    commands.entity(entity).push_children(&[content_entity]);
+                    nine_patch_content.loaded = true;
+                }
+                PatchElement::ButtonCancel => {
+                    let content_entity = commands
+                        .spawn_bundle(
+                            TextBundle::from_section(
                                 "CANCEL",
                                 TextStyle {
                                     font: font.clone(),
                                     font_size: 50.0,
                                     color: Color::RED,
                                 },
-                                TextAlignment::default(),
-                            ),
-                            ..Default::default()
-                        })
+                            )
+                            .with_style(Style {
+                                margin: UiRect {
+                                    left: Val::Px(50.),
+                                    right: Val::Auto,
+                                    top: Val::Auto,
+                                    bottom: Val::Px(10.),
+                                },
+                                ..Default::default()
+                            }),
+                        )
                         .id();
                     commands.entity(entity).push_children(&[content_entity]);
                     nine_patch_content.loaded = true;

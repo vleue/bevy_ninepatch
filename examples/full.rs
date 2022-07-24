@@ -28,8 +28,6 @@ fn setup(
 ) {
     // load the assets
     let cornered_panel_texture_handle = asset_server.load("metalPanel_yellowCorner.png");
-    let _panel_texture_handle: Handle<Image> = asset_server.load("glassPanel_corners.png");
-    let _button_texture_handle: Handle<Image> = asset_server.load("blue_button02.png");
 
     let panel_nine_patch_handle = nine_patches.add(NinePatchBuilder::from_patches(vec![
         vec![
@@ -129,7 +127,7 @@ fn setup(
         )
         .insert(UiElement::Panel);
 
-    commands.spawn_bundle(UiCameraBundle::default());
+    commands.spawn_bundle(Camera2dBundle::default());
 }
 
 fn set_content(
@@ -186,8 +184,16 @@ fn set_content(
                 }
                 (UiElement::Panel, Content::Title) => {
                     let content_entity = commands
-                        .spawn_bundle(TextBundle {
-                            style: Style {
+                        .spawn_bundle(
+                            TextBundle::from_section(
+                                "Example  Title",
+                                TextStyle {
+                                    font: font.clone(),
+                                    font_size: 25.0,
+                                    color: Color::BLUE,
+                                },
+                            )
+                            .with_style(Style {
                                 margin: UiRect {
                                     left: Val::Undefined,
                                     right: Val::Auto,
@@ -195,18 +201,8 @@ fn set_content(
                                     bottom: Val::Px(8.),
                                 },
                                 ..Default::default()
-                            },
-                            text: Text::with_section(
-                                "Example   Title",
-                                TextStyle {
-                                    font: font.clone(),
-                                    font_size: 25.0,
-                                    color: Color::BLUE,
-                                },
-                                TextAlignment::default(),
-                            ),
-                            ..Default::default()
-                        })
+                            }),
+                        )
                         .id();
                     commands.entity(entity).push_children(&[content_entity]);
                     nine_patch_content.loaded = true;
@@ -282,8 +278,16 @@ fn set_content(
                 }
                 (UiElement::ButtonOK, _) => {
                     let content_entity = commands
-                        .spawn_bundle(TextBundle {
-                            style: Style {
+                        .spawn_bundle(
+                            TextBundle::from_section(
+                                "OK",
+                                TextStyle {
+                                    font: font.clone(),
+                                    font_size: 50.0,
+                                    color: Color::GREEN,
+                                },
+                            )
+                            .with_style(Style {
                                 margin: UiRect {
                                     left: Val::Px(110.),
                                     right: Val::Auto,
@@ -291,27 +295,24 @@ fn set_content(
                                     bottom: Val::Px(10.),
                                 },
                                 ..Default::default()
-                            },
-                            text: Text::with_section(
-                                "OK",
-                                TextStyle {
-                                    font: font.clone(),
-                                    font_size: 50.0,
-                                    color: Color::GREEN,
-                                },
-                                TextAlignment::default(),
-                            ),
-
-                            ..Default::default()
-                        })
+                            }),
+                        )
                         .id();
                     commands.entity(entity).push_children(&[content_entity]);
                     nine_patch_content.loaded = true;
                 }
                 (UiElement::ButtonCancel, _) => {
                     let content_entity = commands
-                        .spawn_bundle(TextBundle {
-                            style: Style {
+                        .spawn_bundle(
+                            TextBundle::from_section(
+                                "CANCEL",
+                                TextStyle {
+                                    font: font.clone(),
+                                    font_size: 50.0,
+                                    color: Color::RED,
+                                },
+                            )
+                            .with_style(Style {
                                 margin: UiRect {
                                     left: Val::Px(50.),
                                     right: Val::Auto,
@@ -319,18 +320,8 @@ fn set_content(
                                     bottom: Val::Px(10.),
                                 },
                                 ..Default::default()
-                            },
-                            text: Text::with_section(
-                                "CANCEL",
-                                TextStyle {
-                                    font: font.clone(),
-                                    font_size: 50.0,
-                                    color: Color::RED,
-                                },
-                                TextAlignment::default(),
-                            ),
-                            ..Default::default()
-                        })
+                            }),
+                        )
                         .id();
                     commands.entity(entity).push_children(&[content_entity]);
                     nine_patch_content.loaded = true;

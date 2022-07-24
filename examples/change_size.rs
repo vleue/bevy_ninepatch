@@ -45,7 +45,7 @@ fn setup(
         },
     );
 
-    commands.spawn_bundle(UiCameraBundle::default());
+    commands.spawn_bundle(Camera2dBundle::default());
 }
 
 // by changing the component `Style.size`, the 9-Patch UI element will be resized
