@@ -15,9 +15,9 @@ use bevy::{
 #[derive(Debug, Clone)]
 pub struct Patch<T: Clone + Send + Sync + 'static> {
     /// Size of the patch in the original image
-    pub original_size: Size<i32>,
+    pub original_size: IVec2,
     /// Size of the patch rendered
-    pub target_size: Size<Val>,
+    pub target_size: Size,
     /// Does this patch can contain content
     pub content: Option<T>,
 }
@@ -76,12 +76,12 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatchBuilder<T
     ) -> Self {
         let top = vec![
             Patch {
-                original_size: Size::new(left_margin as i32, top_margin as i32),
+                original_size: IVec2::new(left_margin as i32, top_margin as i32),
                 target_size: Size::new(Val::Undefined, Val::Undefined),
                 content: None,
             },
             Patch {
-                original_size: Size::new(
+                original_size: IVec2::new(
                     -(left_margin as i32) - right_margin as i32,
                     top_margin as i32,
                 ),
@@ -89,14 +89,14 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatchBuilder<T
                 content: None,
             },
             Patch {
-                original_size: Size::new(right_margin as i32, top_margin as i32),
+                original_size: IVec2::new(right_margin as i32, top_margin as i32),
                 target_size: Size::new(Val::Undefined, Val::Undefined),
                 content: None,
             },
         ];
         let middle = vec![
             Patch {
-                original_size: Size::new(
+                original_size: IVec2::new(
                     left_margin as i32,
                     -(top_margin as i32) - bottom_margin as i32,
                 ),
@@ -104,7 +104,7 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatchBuilder<T
                 content: None,
             },
             Patch {
-                original_size: Size::new(
+                original_size: IVec2::new(
                     -(left_margin as i32) - right_margin as i32,
                     -(top_margin as i32) - bottom_margin as i32,
                 ),
@@ -112,7 +112,7 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatchBuilder<T
                 content: Some(content),
             },
             Patch {
-                original_size: Size::new(
+                original_size: IVec2::new(
                     right_margin as i32,
                     -(top_margin as i32) - bottom_margin as i32,
                 ),
@@ -122,12 +122,12 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatchBuilder<T
         ];
         let bottom = vec![
             Patch {
-                original_size: Size::new(left_margin as i32, bottom_margin as i32),
+                original_size: IVec2::new(left_margin as i32, bottom_margin as i32),
                 target_size: Size::new(Val::Undefined, Val::Undefined),
                 content: None,
             },
             Patch {
-                original_size: Size::new(
+                original_size: IVec2::new(
                     -(left_margin as i32) - right_margin as i32,
                     bottom_margin as i32,
                 ),
@@ -135,7 +135,7 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatchBuilder<T
                 content: None,
             },
             Patch {
-                original_size: Size::new(right_margin as i32, bottom_margin as i32),
+                original_size: IVec2::new(right_margin as i32, bottom_margin as i32),
                 target_size: Size::new(Val::Undefined, Val::Undefined),
                 content: None,
             },
@@ -148,18 +148,18 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatchBuilder<T
     }
 }
 
-fn to_width(patch: Size<i32>, total: Extent3d) -> u32 {
-    if patch.width > 0 {
-        patch.width as u32
+fn to_width(patch: IVec2, total: Extent3d) -> u32 {
+    if patch.x > 0 {
+        patch.x as u32
     } else {
-        (total.width as i32 + patch.width) as u32
+        (total.width as i32 + patch.x) as u32
     }
 }
-fn to_height(patch: Size<i32>, total: Extent3d) -> u32 {
-    if patch.height > 0 {
-        patch.height as u32
+fn to_height(patch: IVec2, total: Extent3d) -> u32 {
+    if patch.y > 0 {
+        patch.y as u32
     } else {
-        (total.height as i32 + patch.height) as u32
+        (total.height as i32 + patch.y) as u32
     }
 }
 
@@ -257,13 +257,13 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatch<T> {
     ) {
         commands
             .entity(parent)
-            .insert_bundle(NodeBundle {
+            .insert(NodeBundle {
                 style: Style {
-                    flex_direction: FlexDirection::ColumnReverse,
+                    flex_direction: FlexDirection::Column,
                     align_content: AlignContent::Stretch,
                     ..*style
                 },
-                color: UiColor(Color::NONE),
+                background_color: BackgroundColor(Color::NONE),
                 ..Default::default()
             })
             .insert(FocusPolicy::Pass);
@@ -284,7 +284,7 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatch<T> {
                 .unwrap_or((Val::Undefined, 0.));
 
             let id = commands
-                .spawn_bundle(NodeBundle {
+                .spawn(NodeBundle {
                     style: Style {
                         size: Size::new(Val::Percent(100.), size_height),
                         flex_direction: FlexDirection::Row,
@@ -294,7 +294,7 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatch<T> {
                         margin: UiRect::all(Val::Px(0.)),
                         ..Default::default()
                     },
-                    color: UiColor(Color::NONE),
+                    background_color: BackgroundColor(Color::NONE),
                     ..Default::default()
                 })
                 .insert(FocusPolicy::Pass)
@@ -318,7 +318,7 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatch<T> {
                         Val::Percent(_) => Val::Auto,
                         other => other,
                     };
-                    let mut child = row_parent.spawn_bundle(ImageBundle {
+                    let mut child = row_parent.spawn(ImageBundle {
                         image: UiImage(self.splitted_texture[n].clone_weak()),
                         style: Style {
                             size: Size::new(size_width, size_height),
