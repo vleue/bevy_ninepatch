@@ -77,14 +77,6 @@ pub struct NinePatchPlugin<T: Clone + Send + Sync + 'static = ()> {
     marker: std::marker::PhantomData<T>,
 }
 
-trait NinePatchPlugina {
-    type Zut;
-}
-
-impl<T: Clone + Send + Sync + 'static> NinePatchPlugina for NinePatchPlugin<T> {
-    type Zut = NinePatchPlugin<()>;
-}
-
 impl<T: Clone + Send + Sync + 'static> Default for NinePatchPlugin<T> {
     fn default() -> Self {
         NinePatchPlugin {
