@@ -33,32 +33,32 @@ fn setup(
         vec![
             // top left corner patch
             Patch {
-                original_size: Size::new(30, 35),
+                original_size: IVec2::new(30, 35),
                 target_size: Size::new(Val::Undefined, Val::Undefined),
                 content: None,
             },
             // top middle-left patch. This patch width can grow, and will contain the content for
             // `PanelContent::Title`
             Patch {
-                original_size: Size::new(15, 35),
+                original_size: IVec2::new(15, 35),
                 target_size: Size::new(Val::Percent(30.), Val::Undefined),
                 content: Some(Content::Title),
             },
             // top middle patch. In the original PNG, it's the yellow titled part
             Patch {
-                original_size: Size::new(25, 35),
+                original_size: IVec2::new(25, 35),
                 target_size: Size::new(Val::Undefined, Val::Undefined),
                 content: None,
             },
             // top middle-right patch. This patch width can grow
             Patch {
-                original_size: Size::new(20, 35),
+                original_size: IVec2::new(20, 35),
                 target_size: Size::new(Val::Percent(70.), Val::Undefined),
                 content: None,
             },
             // top right corner
             Patch {
-                original_size: Size::new(10, 35),
+                original_size: IVec2::new(10, 35),
                 target_size: Size::new(Val::Undefined, Val::Undefined),
                 content: None,
             },
@@ -66,19 +66,19 @@ fn setup(
         vec![
             // left border. This patch height can grow
             Patch {
-                original_size: Size::new(10, -45),
+                original_size: IVec2::new(10, -45),
                 target_size: Size::new(Val::Undefined, Val::Percent(100.)),
                 content: None,
             },
             // center. This patch can grow both in height and width, and will contain `PanelContent::Body`
             Patch {
-                original_size: Size::new(-20, -45),
+                original_size: IVec2::new(-20, -45),
                 target_size: Size::new(Val::Percent(100.), Val::Percent(100.)),
                 content: Some(Content::Content),
             },
             // right border. This patch height can grow
             Patch {
-                original_size: Size::new(10, -45),
+                original_size: IVec2::new(10, -45),
                 target_size: Size::new(Val::Undefined, Val::Percent(100.)),
                 content: None,
             },
@@ -86,19 +86,19 @@ fn setup(
         vec![
             // bottom left corner
             Patch {
-                original_size: Size::new(10, 10),
+                original_size: IVec2::new(10, 10),
                 target_size: Size::new(Val::Undefined, Val::Undefined),
                 content: None,
             },
             // bottom middle. This patch width can grow
             Patch {
-                original_size: Size::new(-20, 10),
+                original_size: IVec2::new(-20, 10),
                 target_size: Size::new(Val::Percent(100.), Val::Undefined),
                 content: None,
             },
             // bottom right corner
             Patch {
-                original_size: Size::new(10, 10),
+                original_size: IVec2::new(10, 10),
                 target_size: Size::new(Val::Undefined, Val::Undefined),
                 content: None,
             },
@@ -106,7 +106,7 @@ fn setup(
     ]));
 
     commands
-        .spawn_bundle(
+        .spawn(
             // this component bundle will be detected by the plugin, and the 9-Patch UI element will be added as a child
             // of this entity
             NinePatchBundle {
@@ -127,7 +127,7 @@ fn setup(
         )
         .insert(UiElement::Panel);
 
-    commands.spawn_bundle(Camera2dBundle::default());
+    commands.spawn(Camera2dBundle::default());
 }
 
 fn set_content(
@@ -158,7 +158,7 @@ fn set_content(
                     );
 
                     let content_entity = commands
-                        .spawn_bundle(
+                        .spawn(
                             // this component bundle will be detected by the plugin, and the 9-Patch UI element will be added as a child
                             // of this entity
                             NinePatchBundle {
@@ -184,7 +184,7 @@ fn set_content(
                 }
                 (UiElement::Panel, Content::Title) => {
                     let content_entity = commands
-                        .spawn_bundle(
+                        .spawn(
                             TextBundle::from_section(
                                 "Example  Title",
                                 TextStyle {
@@ -197,8 +197,8 @@ fn set_content(
                                 margin: UiRect {
                                     left: Val::Undefined,
                                     right: Val::Auto,
-                                    top: Val::Auto,
-                                    bottom: Val::Px(8.),
+                                    top: Val::Px(8.),
+                                    bottom: Val::Auto,
                                 },
                                 ..Default::default()
                             }),
@@ -215,7 +215,7 @@ fn set_content(
                     );
 
                     let button_cancel_entity = commands
-                        .spawn_bundle(
+                        .spawn(
                             // this component bundle will be detected by the plugin, and the 9-Patch UI element will be added as a child
                             // of this entity
                             NinePatchBundle {
@@ -244,7 +244,7 @@ fn set_content(
                         .id();
 
                     let button_ok_entity = commands
-                        .spawn_bundle(
+                        .spawn(
                             // this component bundle will be detected by the plugin, and the 9-Patch UI element will be added as a child
                             // of this entity
                             NinePatchBundle {
@@ -278,7 +278,7 @@ fn set_content(
                 }
                 (UiElement::ButtonOK, _) => {
                     let content_entity = commands
-                        .spawn_bundle(
+                        .spawn(
                             TextBundle::from_section(
                                 "OK",
                                 TextStyle {
@@ -291,8 +291,8 @@ fn set_content(
                                 margin: UiRect {
                                     left: Val::Px(110.),
                                     right: Val::Auto,
-                                    top: Val::Auto,
-                                    bottom: Val::Px(10.),
+                                    top: Val::Px(10.),
+                                    bottom: Val::Auto,
                                 },
                                 ..Default::default()
                             }),
@@ -303,7 +303,7 @@ fn set_content(
                 }
                 (UiElement::ButtonCancel, _) => {
                     let content_entity = commands
-                        .spawn_bundle(
+                        .spawn(
                             TextBundle::from_section(
                                 "CANCEL",
                                 TextStyle {
@@ -316,8 +316,8 @@ fn set_content(
                                 margin: UiRect {
                                     left: Val::Px(50.),
                                     right: Val::Auto,
-                                    top: Val::Auto,
-                                    bottom: Val::Px(10.),
+                                    top: Val::Px(10.),
+                                    bottom: Val::Auto,
                                 },
                                 ..Default::default()
                             }),
@@ -348,7 +348,7 @@ enum UiElement {
 // by changing the component `Style.size`, the 9-Patch UI element will be resized
 fn update_size(time: Res<Time>, mut query: Query<(&mut Style, &UiElement)>) {
     for (mut style, panel) in query.iter_mut() {
-        let (x, y) = time.seconds_since_startup().sin_cos();
+        let (x, y) = time.elapsed_seconds().sin_cos();
 
         match panel {
             UiElement::Panel => {

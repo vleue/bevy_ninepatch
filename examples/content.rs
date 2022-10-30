@@ -26,7 +26,7 @@ fn setup(
     // load the 9-Patch as an assets and keep an `Handle<NinePatchBuilder<()>>`
     let nine_patch_handle = nine_patches.add(NinePatchBuilder::by_margins(20, 20, 20, 20));
 
-    commands.spawn_bundle(
+    commands.spawn(
         // this component bundle will be detected by the plugin, and the 9-Patch UI element will be added as a child
         // of this entity
         NinePatchBundle {
@@ -46,7 +46,7 @@ fn setup(
         },
     );
 
-    commands.spawn_bundle(Camera2dBundle::default());
+    commands.spawn(Camera2dBundle::default());
 }
 
 fn set_content(
@@ -60,7 +60,7 @@ fn set_content(
             let font = asset_server.load("Kenney Future Narrow.ttf");
 
             let content_entity = commands
-                .spawn_bundle(TextBundle::from_section(
+                .spawn(TextBundle::from_section(
                     "Hello!",
                     TextStyle {
                         font,

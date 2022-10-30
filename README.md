@@ -34,9 +34,9 @@ fn setup(
     let nine_patch_handle = nine_patches.add(NinePatchBuilder::by_margins(20, 20, 20, 20));
 
     // This entity will be placed in the center of the 9-Patch UI element
-    let content_entity = commands.spawn_bundle(TextBundle { ..Default::default() }).id();
+    let content_entity = commands.spawn(TextBundle { ..Default::default() }).id();
 
-    commands.spawn_bundle(
+    commands.spawn(
         NinePatchBundle {
             style: Style {
                 margin: UiRect::all(Val::Auto),

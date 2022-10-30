@@ -19,14 +19,14 @@ fn setup(
     asset_server: Res<AssetServer>,
     mut nine_patches: ResMut<Assets<NinePatchBuilder<()>>>,
 ) {
-    commands.spawn_bundle(Camera2dBundle::default());
+    commands.spawn(Camera2dBundle::default());
 
     // prepare the button
     let button_texture_handle = asset_server.load("blue_button02.png");
     let button_nine_patch_handle = nine_patches.add(NinePatchBuilder::by_margins(5, 10, 6, 6));
 
     commands
-        .spawn_bundle(
+        .spawn(
             // this component bundle will be detected by the plugin, and the 9-Patch UI element will be added as a child
             // of this entity
             NinePatchBundle {
@@ -53,7 +53,7 @@ fn setup(
         )
         .insert(PatchElement::ButtonCancel);
     commands
-        .spawn_bundle(
+        .spawn(
             // this component bundle will be detected by the plugin, and the 9-Patch UI element will be added as a child
             // of this entity
             NinePatchBundle {
@@ -103,7 +103,7 @@ fn set_content(
             {
                 PatchElement::ButtonOk => {
                     let content_entity = commands
-                        .spawn_bundle(
+                        .spawn(
                             TextBundle::from_section(
                                 "OK",
                                 TextStyle {
@@ -116,8 +116,8 @@ fn set_content(
                                 margin: UiRect {
                                     left: Val::Px(50.),
                                     right: Val::Auto,
-                                    top: Val::Auto,
-                                    bottom: Val::Px(10.),
+                                    top: Val::Px(10.),
+                                    bottom: Val::Auto,
                                 },
                                 ..Default::default()
                             }),
@@ -128,7 +128,7 @@ fn set_content(
                 }
                 PatchElement::ButtonCancel => {
                     let content_entity = commands
-                        .spawn_bundle(
+                        .spawn(
                             TextBundle::from_section(
                                 "CANCEL",
                                 TextStyle {
@@ -141,8 +141,8 @@ fn set_content(
                                 margin: UiRect {
                                     left: Val::Px(50.),
                                     right: Val::Auto,
-                                    top: Val::Auto,
-                                    bottom: Val::Px(10.),
+                                    top: Val::Px(10.),
+                                    bottom: Val::Auto,
                                 },
                                 ..Default::default()
                             }),

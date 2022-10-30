@@ -31,7 +31,7 @@ fn setup(
         Content::Panel,
     ));
 
-    commands.spawn_bundle(
+    commands.spawn(
         // this component bundle will be detected by the plugin, and the 9-Patch UI element will be added as a child
         // of this entity
         NinePatchBundle {
@@ -51,7 +51,7 @@ fn setup(
         },
     );
 
-    commands.spawn_bundle(Camera2dBundle::default());
+    commands.spawn(Camera2dBundle::default());
 }
 
 fn set_content(
@@ -71,7 +71,7 @@ fn set_content(
                     );
 
                     let content_entity = commands
-                        .spawn_bundle(
+                        .spawn(
                             // this component bundle will be detected by the plugin, and the 9-Patch UI element will be added as a child
                             // of this entity
                             NinePatchBundle {
@@ -104,7 +104,7 @@ fn set_content(
                     let font = asset_server.load("Kenney Future Narrow.ttf");
 
                     let content_entity = commands
-                        .spawn_bundle(
+                        .spawn(
                             TextBundle::from_section(
                                 "OK",
                                 TextStyle {
@@ -117,8 +117,8 @@ fn set_content(
                                 margin: UiRect {
                                     left: Val::Px(60.),
                                     right: Val::Auto,
-                                    top: Val::Auto,
-                                    bottom: Val::Px(20.),
+                                    top: Val::Px(20.),
+                                    bottom: Val::Auto,
                                 },
                                 ..Default::default()
                             }),
