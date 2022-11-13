@@ -25,60 +25,58 @@ fn setup(
     let button_texture_handle = asset_server.load("blue_button02.png");
     let button_nine_patch_handle = nine_patches.add(NinePatchBuilder::by_margins(5, 10, 6, 6));
 
-    commands
-        .spawn(
-            // this component bundle will be detected by the plugin, and the 9-Patch UI element will be added as a child
-            // of this entity
-            NinePatchBundle {
-                style: Style {
-                    margin: UiRect {
-                        left: Val::Px(0.),
-                        right: Val::Auto,
-                        top: Val::Auto,
-                        bottom: Val::Px(0.),
-                    },
-                    size: Size::new(Val::Px(300.), Val::Px(80.)),
+    commands.spawn((
+        // this component bundle will be detected by the plugin, and the 9-Patch UI element will be added as a child
+        // of this entity
+        NinePatchBundle {
+            style: Style {
+                margin: UiRect {
+                    left: Val::Px(0.),
+                    right: Val::Auto,
+                    top: Val::Auto,
+                    bottom: Val::Px(0.),
+                },
+                size: Size::new(Val::Px(300.), Val::Px(80.)),
 
-                    justify_content: JustifyContent::Center,
-                    align_items: AlignItems::Center,
-                    ..Default::default()
-                },
-                nine_patch_data: NinePatchData {
-                    nine_patch: button_nine_patch_handle.clone(),
-                    texture: button_texture_handle.clone(),
-                    ..Default::default()
-                },
+                justify_content: JustifyContent::Center,
+                align_items: AlignItems::Center,
                 ..Default::default()
             },
-        )
-        .insert(PatchElement::ButtonCancel);
-    commands
-        .spawn(
-            // this component bundle will be detected by the plugin, and the 9-Patch UI element will be added as a child
-            // of this entity
-            NinePatchBundle {
-                style: Style {
-                    margin: UiRect {
-                        left: Val::Px(0.),
-                        right: Val::Auto,
-                        top: Val::Auto,
-                        bottom: Val::Px(0.),
-                    },
-                    size: Size::new(Val::Px(300.), Val::Px(80.)),
-
-                    justify_content: JustifyContent::Center,
-                    align_items: AlignItems::Center,
-                    ..Default::default()
-                },
-                nine_patch_data: NinePatchData {
-                    nine_patch: button_nine_patch_handle,
-                    texture: button_texture_handle,
-                    ..Default::default()
-                },
+            nine_patch_data: NinePatchData {
+                nine_patch: button_nine_patch_handle.clone(),
+                texture: button_texture_handle.clone(),
                 ..Default::default()
             },
-        )
-        .insert(PatchElement::ButtonOk);
+            ..Default::default()
+        },
+        PatchElement::ButtonCancel,
+    ));
+    commands.spawn((
+        // this component bundle will be detected by the plugin, and the 9-Patch UI element will be added as a child
+        // of this entity
+        NinePatchBundle {
+            style: Style {
+                margin: UiRect {
+                    left: Val::Px(0.),
+                    right: Val::Auto,
+                    top: Val::Auto,
+                    bottom: Val::Px(0.),
+                },
+                size: Size::new(Val::Px(300.), Val::Px(80.)),
+
+                justify_content: JustifyContent::Center,
+                align_items: AlignItems::Center,
+                ..Default::default()
+            },
+            nine_patch_data: NinePatchData {
+                nine_patch: button_nine_patch_handle,
+                texture: button_texture_handle,
+                ..Default::default()
+            },
+            ..Default::default()
+        },
+        PatchElement::ButtonOk,
+    ));
 }
 
 #[derive(Component)]

@@ -105,27 +105,26 @@ fn setup(
         ],
     ]));
 
-    commands
-        .spawn(
-            // this component bundle will be detected by the plugin, and the 9-Patch UI element will be added as a child
-            // of this entity
-            NinePatchBundle {
-                style: Style {
-                    margin: UiRect::all(Val::Auto),
-                    justify_content: JustifyContent::Center,
-                    align_items: AlignItems::Center,
-                    size: Size::new(Val::Px(900.), Val::Px(600.)),
-                    ..Default::default()
-                },
-                nine_patch_data: NinePatchData {
-                    nine_patch: panel_nine_patch_handle,
-                    texture: cornered_panel_texture_handle,
-                    ..Default::default()
-                },
+    commands.spawn((
+        // this component bundle will be detected by the plugin, and the 9-Patch UI element will be added as a child
+        // of this entity
+        NinePatchBundle {
+            style: Style {
+                margin: UiRect::all(Val::Auto),
+                justify_content: JustifyContent::Center,
+                align_items: AlignItems::Center,
+                size: Size::new(Val::Px(900.), Val::Px(600.)),
                 ..Default::default()
             },
-        )
-        .insert(UiElement::Panel);
+            nine_patch_data: NinePatchData {
+                nine_patch: panel_nine_patch_handle,
+                texture: cornered_panel_texture_handle,
+                ..Default::default()
+            },
+            ..Default::default()
+        },
+        UiElement::Panel,
+    ));
 
     commands.spawn(Camera2dBundle::default());
 }
@@ -158,7 +157,7 @@ fn set_content(
                     );
 
                     let content_entity = commands
-                        .spawn(
+                        .spawn((
                             // this component bundle will be detected by the plugin, and the 9-Patch UI element will be added as a child
                             // of this entity
                             NinePatchBundle {
@@ -176,8 +175,8 @@ fn set_content(
                                 },
                                 ..Default::default()
                             },
-                        )
-                        .insert(UiElement::InnerPanel)
+                            UiElement::InnerPanel,
+                        ))
                         .id();
                     commands.entity(entity).push_children(&[content_entity]);
                     nine_patch_content.loaded = true;
@@ -215,7 +214,7 @@ fn set_content(
                     );
 
                     let button_cancel_entity = commands
-                        .spawn(
+                        .spawn((
                             // this component bundle will be detected by the plugin, and the 9-Patch UI element will be added as a child
                             // of this entity
                             NinePatchBundle {
@@ -239,12 +238,12 @@ fn set_content(
                                 },
                                 ..Default::default()
                             },
-                        )
-                        .insert(UiElement::ButtonCancel)
+                            UiElement::ButtonCancel,
+                        ))
                         .id();
 
                     let button_ok_entity = commands
-                        .spawn(
+                        .spawn((
                             // this component bundle will be detected by the plugin, and the 9-Patch UI element will be added as a child
                             // of this entity
                             NinePatchBundle {
@@ -267,8 +266,8 @@ fn set_content(
                                 },
                                 ..Default::default()
                             },
-                        )
-                        .insert(UiElement::ButtonOK)
+                            UiElement::ButtonOK,
+                        ))
                         .id();
 
                     commands

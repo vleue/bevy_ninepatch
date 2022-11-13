@@ -1,14 +1,8 @@
-use bevy::prelude::*;
-use bevy::render::render_resource::{Extent3d, TextureDimension, TextureFormat};
 use bevy::{
-    asset::{Assets, Handle},
-    hierarchy::BuildChildren,
+    prelude::*,
     reflect::TypeUuid,
-    render::color::Color,
-    ui::{
-        entity::{ImageBundle, NodeBundle},
-        AlignContent, FlexDirection, FocusPolicy, Style, Val,
-    },
+    render::render_resource::{Extent3d, TextureDimension, TextureFormat},
+    ui::FocusPolicy,
 };
 
 /// Describe a patch in the original image, how it should grow and if it can have content
@@ -255,18 +249,16 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatch<T> {
         style: &Style,
         contents: &Option<std::collections::HashMap<T, Entity>>,
     ) {
-        commands
-            .entity(parent)
-            .insert(NodeBundle {
-                style: Style {
-                    flex_direction: FlexDirection::Column,
-                    align_content: AlignContent::Stretch,
-                    ..*style
-                },
-                background_color: BackgroundColor(Color::NONE),
-                ..Default::default()
-            })
-            .insert(FocusPolicy::Pass);
+        commands.entity(parent).insert(NodeBundle {
+            style: Style {
+                flex_direction: FlexDirection::Column,
+                align_content: AlignContent::Stretch,
+                ..*style
+            },
+            background_color: BackgroundColor(Color::NONE),
+            focus_policy: FocusPolicy::Pass,
+            ..Default::default()
+        });
         let mut rows = vec![];
         let mut n = 0;
         for row in self.patches.iter() {
@@ -295,9 +287,9 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatch<T> {
                         ..Default::default()
                     },
                     background_color: BackgroundColor(Color::NONE),
+                    focus_policy: FocusPolicy::Pass,
                     ..Default::default()
                 })
-                .insert(FocusPolicy::Pass)
                 .id();
             rows.push(id);
             commands.entity(id).with_children(|row_parent| {
@@ -327,9 +319,9 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatch<T> {
                             flex_shrink: growth,
                             ..Default::default()
                         },
+                        focus_policy: FocusPolicy::Pass,
                         ..Default::default()
                     });
-                    child.insert(FocusPolicy::Pass);
                     if let Some(content_part) = column_item.content.as_ref() {
                         child.insert(NinePatchContent {
                             content: content_part.clone(),
