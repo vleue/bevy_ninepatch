@@ -20,7 +20,7 @@ features = [ "bevy_ui", "bevy_render", "bevy_sprite", "bevy_asset" ]
 
 
 [features]
-"examples" = [ "bevy/bevy_winit", "bevy/render", "bevy/png" ]
+"examples" = [ "bevy/bevy_winit", "bevy/png", "bevy/bevy_core_pipeline", "bevy/bevy_text" ]
 
 [[example]]
 name = "change_size"

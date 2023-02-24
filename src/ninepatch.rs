@@ -311,7 +311,10 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatch<T> {
                         other => other,
                     };
                     let mut child = row_parent.spawn(ImageBundle {
-                        image: UiImage(self.splitted_texture[n].clone_weak()),
+                        image: UiImage {
+                            texture: self.splitted_texture[n].clone_weak(),
+                            ..default()
+                        },
                         style: Style {
                             size: Size::new(size_width, size_height),
                             margin: UiRect::all(Val::Px(0.)),
