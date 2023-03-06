@@ -13,8 +13,7 @@ readme = "README.md"
 exclude = ["examples/*.png", "examples/*.gif", "*.png", "assets/"]
 
 [dependencies.bevy]
-version = "0.9"
-git = "https://github.com/bevyengine/bevy"
+version = "0.10"
 default-features = false
 features = [ "bevy_ui", "bevy_render", "bevy_sprite", "bevy_asset" ]
 
