@@ -11,7 +11,7 @@
 #![doc = include_str!("../README.md")]
 
 mod ninepatch;
-pub use ninepatch::{NinePatch, NinePatchBuilder, NinePatchContent, Patch};
+pub use ninepatch::{NinePatch, NinePatchBuilder, NinePatchContent, Patch, Size};
 
 mod plugin;
 pub use plugin::*;

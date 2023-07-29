@@ -1,6 +1,6 @@
 use bevy::{
     prelude::*,
-    reflect::TypeUuid,
+    reflect::{TypePath, TypeUuid},
     render::render_resource::{Extent3d, TextureDimension, TextureFormat},
     ui::FocusPolicy,
 };
@@ -16,8 +16,24 @@ pub struct Patch<T: Clone + Send + Sync + 'static> {
     pub content: Option<T>,
 }
 
+/// Type used for target_size of [`Patch`]
+#[derive(Debug, Clone, Copy)]
+pub struct Size {
+    /// width
+    pub width: Val,
+    /// height
+    pub height: Val,
+}
+
+impl Size {
+    /// create a new size with width and height
+    pub fn new(width: Val, height: Val) -> Size {
+        Size { width, height }
+    }
+}
+
 /// Holds the patches of a nine patch texture
-#[derive(Debug)]
+#[derive(TypePath, Debug)]
 pub struct NinePatchBuilder<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static = ()> {
     /// Patches for a nine patch texture. See example `full.rs` on how to use directly
     pub patches: Vec<Vec<Patch<T>>>,
@@ -71,7 +87,7 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatchBuilder<T
         let top = vec![
             Patch {
                 original_size: IVec2::new(left_margin as i32, top_margin as i32),
-                target_size: Size::new(Val::Undefined, Val::Undefined),
+                target_size: Size::new(Val::Px(0.), Val::Px(0.)),
                 content: None,
             },
             Patch {
@@ -79,12 +95,12 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatchBuilder<T
                     -(left_margin as i32) - right_margin as i32,
                     top_margin as i32,
                 ),
-                target_size: Size::new(Val::Auto, Val::Undefined),
+                target_size: Size::new(Val::Auto, Val::Px(0.)),
                 content: None,
             },
             Patch {
                 original_size: IVec2::new(right_margin as i32, top_margin as i32),
-                target_size: Size::new(Val::Undefined, Val::Undefined),
+                target_size: Size::new(Val::Px(0.), Val::Px(0.)),
                 content: None,
             },
         ];
@@ -94,7 +110,7 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatchBuilder<T
                     left_margin as i32,
                     -(top_margin as i32) - bottom_margin as i32,
                 ),
-                target_size: Size::new(Val::Undefined, Val::Auto),
+                target_size: Size::new(Val::Px(0.), Val::Auto),
                 content: None,
             },
             Patch {
@@ -110,14 +126,14 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatchBuilder<T
                     right_margin as i32,
                     -(top_margin as i32) - bottom_margin as i32,
                 ),
-                target_size: Size::new(Val::Undefined, Val::Auto),
+                target_size: Size::new(Val::Px(0.), Val::Auto),
                 content: None,
             },
         ];
         let bottom = vec![
             Patch {
                 original_size: IVec2::new(left_margin as i32, bottom_margin as i32),
-                target_size: Size::new(Val::Undefined, Val::Undefined),
+                target_size: Size::new(Val::Px(0.), Val::Px(0.)),
                 content: None,
             },
             Patch {
@@ -125,12 +141,12 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatchBuilder<T
                     -(left_margin as i32) - right_margin as i32,
                     bottom_margin as i32,
                 ),
-                target_size: Size::new(Val::Auto, Val::Undefined),
+                target_size: Size::new(Val::Auto, Val::Px(0.)),
                 content: None,
             },
             Patch {
                 original_size: IVec2::new(right_margin as i32, bottom_margin as i32),
-                target_size: Size::new(Val::Undefined, Val::Undefined),
+                target_size: Size::new(Val::Px(0.), Val::Px(0.)),
                 content: None,
             },
         ];
@@ -253,7 +269,7 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatch<T> {
             style: Style {
                 flex_direction: FlexDirection::Column,
                 align_content: AlignContent::Stretch,
-                ..*style
+                ..style.clone()
             },
             background_color: BackgroundColor(Color::NONE),
             focus_policy: FocusPolicy::Pass,
@@ -265,20 +281,30 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatch<T> {
             let (size_height, growth) = row
                 .get(0)
                 .map(|p| match p.target_size.height {
-                    Val::Undefined => (
-                        Val::Px(to_height(p.original_size, self.texture_size) as f32),
-                        0.,
-                    ),
-                    Val::Px(i) => (Val::Px(i), 0.),
+                    Val::Px(i) => {
+                        if i == 0. {
+                            (
+                                Val::Px(to_height(p.original_size, self.texture_size) as f32),
+                                0.,
+                            )
+                        } else {
+                            (Val::Px(i), 0.)
+                        }
+                    }
                     Val::Auto => (Val::Auto, 1.),
                     Val::Percent(x) => (Val::Auto, x / 100.),
+                    Val::Vh(_) => todo!(),
+                    Val::Vw(_) => todo!(),
+                    Val::VMin(_) => todo!(),
+                    Val::VMax(_) => todo!(),
                 })
-                .unwrap_or((Val::Undefined, 0.));
+                .unwrap_or((Val::Px(0.), 0.));
 
             let id = commands
                 .spawn(NodeBundle {
                     style: Style {
-                        size: Size::new(Val::Percent(100.), size_height),
+                        width: Val::Percent(100.),
+                        height: size_height,
                         flex_direction: FlexDirection::Row,
                         align_content: AlignContent::Stretch,
                         flex_grow: growth,
@@ -295,17 +321,33 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatch<T> {
             commands.entity(id).with_children(|row_parent| {
                 for column_item in row.iter() {
                     let (size_width, growth) = match column_item.target_size.width {
-                        Val::Undefined => (
-                            Val::Px(to_width(column_item.original_size, self.texture_size) as f32),
-                            0.,
-                        ),
-                        Val::Px(i) => (Val::Px(i), 0.),
+                        Val::Px(i) => {
+                            if i == 0. {
+                                (
+                                    Val::Px(to_width(column_item.original_size, self.texture_size)
+                                        as f32),
+                                    0.,
+                                )
+                            } else {
+                                (Val::Px(i), 0.)
+                            }
+                        }
                         Val::Auto => (Val::Auto, 1.),
                         Val::Percent(x) => (Val::Auto, x / 100.),
+                        Val::Vw(_) => todo!(),
+                        Val::Vh(_) => todo!(),
+                        Val::VMin(_) => todo!(),
+                        Val::VMax(_) => todo!(),
                     };
                     let size_height = match column_item.target_size.height {
-                        Val::Undefined => {
-                            Val::Px(to_height(column_item.original_size, self.texture_size) as f32)
+                        Val::Px(i) => {
+                            if i == 0. {
+                                Val::Px(
+                                    to_height(column_item.original_size, self.texture_size) as f32
+                                )
+                            } else {
+                                Val::Px(i)
+                            }
                         }
                         Val::Percent(_) => Val::Auto,
                         other => other,
@@ -316,7 +358,8 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> NinePatch<T> {
                             ..default()
                         },
                         style: Style {
-                            size: Size::new(size_width, size_height),
+                            width: size_width,
+                            height: size_height,
                             margin: UiRect::all(Val::Px(0.)),
                             flex_grow: growth,
                             flex_shrink: growth,

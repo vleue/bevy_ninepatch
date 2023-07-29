@@ -4,11 +4,13 @@ use bevy_ninepatch::*;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     App::default()
-        .add_plugins(DefaultPlugins)
-        // Add the `NinePatchPlugin` plugin
-        .add_plugin(NinePatchPlugin::<()>::default())
-        .add_startup_system(setup)
-        .add_system(set_content)
+        .add_plugins((
+            DefaultPlugins,
+            // Add the `NinePatchPlugin` plugin
+            NinePatchPlugin::<()>::default(),
+        ))
+        .add_systems(Startup, setup)
+        .add_systems(Update, set_content)
         .run();
 
     Ok(())
@@ -36,7 +38,8 @@ fn setup(
                     top: Val::Auto,
                     bottom: Val::Px(0.),
                 },
-                size: Size::new(Val::Px(300.), Val::Px(80.)),
+                width: Val::Px(300.),
+                height: Val::Px(80.),
 
                 justify_content: JustifyContent::Center,
                 align_items: AlignItems::Center,
@@ -62,7 +65,8 @@ fn setup(
                     top: Val::Auto,
                     bottom: Val::Px(0.),
                 },
-                size: Size::new(Val::Px(300.), Val::Px(80.)),
+                width: Val::Px(300.),
+                height: Val::Px(80.),
 
                 justify_content: JustifyContent::Center,
                 align_items: AlignItems::Center,

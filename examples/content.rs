@@ -6,11 +6,13 @@ use bevy_ninepatch::{
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     App::default()
-        .add_plugins(DefaultPlugins)
-        // Add the `NinePatchPlugin` plugin
-        .add_plugin(NinePatchPlugin::<()>::default())
-        .add_startup_system(setup)
-        .add_system(set_content)
+        .add_plugins((
+            DefaultPlugins,
+            // Add the `NinePatchPlugin` plugin
+            NinePatchPlugin::<()>::default(),
+        ))
+        .add_systems(Startup, setup)
+        .add_systems(Update, set_content)
         .run();
 
     Ok(())
@@ -34,7 +36,8 @@ fn setup(
                 margin: UiRect::all(Val::Auto),
                 justify_content: JustifyContent::Center,
                 align_items: AlignItems::Center,
-                size: Size::new(Val::Px(500.), Val::Px(300.)),
+                width: Val::Px(500.),
+                height: Val::Px(300.),
                 ..Default::default()
             },
             nine_patch_data: NinePatchData {

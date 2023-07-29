@@ -1,10 +1,10 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, reflect::TypePath};
 
 use crate::ninepatch::*;
 
 /// State of the current `NinePatch`
 #[derive(Debug, Clone, Component)]
-pub struct NinePatchData<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> {
+pub struct NinePatchData<T: Clone + Send + Sync + Eq + std::hash::Hash + TypePath + 'static> {
     /// Handle of the texture
     pub texture: Handle<Image>,
     /// Handle to the `NinePatchBuilder`
@@ -15,7 +15,9 @@ pub struct NinePatchData<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static
     pub content: Option<std::collections::HashMap<T, Entity>>,
 }
 
-impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> Default for NinePatchData<T> {
+impl<T: Clone + Send + Sync + Eq + std::hash::Hash + TypePath + 'static> Default
+    for NinePatchData<T>
+{
     fn default() -> Self {
         NinePatchData {
             texture: Default::default(),
@@ -26,7 +28,9 @@ impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> Default for NinePa
     }
 }
 
-impl<T: Clone + Send + Sync + Default + Eq + std::hash::Hash + 'static> NinePatchData<T> {
+impl<T: Clone + Send + Sync + Default + Eq + std::hash::Hash + TypePath + 'static>
+    NinePatchData<T>
+{
     /// Create a NinePathData with content when there is only one content
     pub fn with_single_content(
         texture: Handle<Image>,
@@ -46,7 +50,7 @@ impl<T: Clone + Send + Sync + Default + Eq + std::hash::Hash + 'static> NinePatc
 
 #[derive(Bundle)]
 /// Component Bundle to place the NinePatch
-pub struct NinePatchBundle<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> {
+pub struct NinePatchBundle<T: Clone + Send + Sync + Eq + std::hash::Hash + TypePath + 'static> {
     /// Style of this UI node
     pub style: Style,
     /// State of the `NinePatch`
@@ -59,7 +63,9 @@ pub struct NinePatchBundle<T: Clone + Send + Sync + Eq + std::hash::Hash + 'stat
     pub global_transform: GlobalTransform,
 }
 
-impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> Default for NinePatchBundle<T> {
+impl<T: Clone + Send + Sync + Eq + std::hash::Hash + TypePath + 'static> Default
+    for NinePatchBundle<T>
+{
     fn default() -> Self {
         NinePatchBundle {
             style: Default::default(),
@@ -84,15 +90,17 @@ impl<T: Clone + Send + Sync + 'static> Default for NinePatchPlugin<T> {
         }
     }
 }
-impl<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static> Plugin for NinePatchPlugin<T> {
+impl<T: Clone + Send + Sync + Eq + std::hash::Hash + TypePath + 'static> Plugin
+    for NinePatchPlugin<T>
+{
     fn build(&self, app: &mut App) {
         app.add_asset::<NinePatchBuilder<T>>()
-            .add_system(create_ninepatches::<T>);
+            .add_systems(Update, create_ninepatches::<T>);
     }
 }
 
 #[allow(clippy::type_complexity)]
-fn create_ninepatches<T: Clone + Send + Sync + Eq + std::hash::Hash + 'static>(
+fn create_ninepatches<T: Clone + Send + Sync + Eq + std::hash::Hash + TypePath + 'static>(
     mut commands: Commands,
     mut nine_patches: ResMut<Assets<NinePatchBuilder<T>>>,
     mut textures: ResMut<Assets<Image>>,

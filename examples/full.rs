@@ -1,21 +1,25 @@
 use bevy::{
     diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},
-    prelude::*,
+    prelude::*, reflect::TypePath,
 };
 
 use bevy_ninepatch::*;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     App::default()
-        .add_plugins(DefaultPlugins)
-        // Add the `NinePatchPlugin` plugin
-        .add_plugin(NinePatchPlugin::<Content>::default())
-        .add_plugin(FrameTimeDiagnosticsPlugin::default())
+        .add_plugins((
+            DefaultPlugins,
+            // Add the `NinePatchPlugin` plugin
+            NinePatchPlugin::<Content>::default(),
+            FrameTimeDiagnosticsPlugin::default(),
+            LogDiagnosticsPlugin::default()
+        ))
         // Adds a system that prints diagnostics to the console
-        .add_plugin(LogDiagnosticsPlugin::default())
-        .add_startup_system(setup)
-        .add_system(set_content)
-        .add_system(update_size)
+        .add_systems(Startup, setup)
+        .add_systems(Update, (
+            set_content,
+            update_size
+        ))
         .run();
 
     Ok(())
@@ -34,32 +38,32 @@ fn setup(
             // top left corner patch
             Patch {
                 original_size: IVec2::new(30, 35),
-                target_size: Size::new(Val::Undefined, Val::Undefined),
+                target_size: Size::new(Val::Px(0.), Val::Px(0.)),
                 content: None,
             },
             // top middle-left patch. This patch width can grow, and will contain the content for
             // `PanelContent::Title`
             Patch {
                 original_size: IVec2::new(15, 35),
-                target_size: Size::new(Val::Percent(30.), Val::Undefined),
+                target_size: Size::new(Val::Percent(30.), Val::Px(0.)),
                 content: Some(Content::Title),
             },
             // top middle patch. In the original PNG, it's the yellow titled part
             Patch {
                 original_size: IVec2::new(25, 35),
-                target_size: Size::new(Val::Undefined, Val::Undefined),
+                target_size: Size::new(Val::Px(0.), Val::Px(0.)),
                 content: None,
             },
             // top middle-right patch. This patch width can grow
             Patch {
                 original_size: IVec2::new(20, 35),
-                target_size: Size::new(Val::Percent(70.), Val::Undefined),
+                target_size: Size::new(Val::Percent(70.), Val::Px(0.)),
                 content: None,
             },
             // top right corner
             Patch {
                 original_size: IVec2::new(10, 35),
-                target_size: Size::new(Val::Undefined, Val::Undefined),
+                target_size: Size::new(Val::Px(0.), Val::Px(0.)),
                 content: None,
             },
         ],
@@ -67,7 +71,7 @@ fn setup(
             // left border. This patch height can grow
             Patch {
                 original_size: IVec2::new(10, -45),
-                target_size: Size::new(Val::Undefined, Val::Percent(100.)),
+                target_size: Size::new(Val::Px(0.), Val::Percent(100.)),
                 content: None,
             },
             // center. This patch can grow both in height and width, and will contain `PanelContent::Body`
@@ -79,7 +83,7 @@ fn setup(
             // right border. This patch height can grow
             Patch {
                 original_size: IVec2::new(10, -45),
-                target_size: Size::new(Val::Undefined, Val::Percent(100.)),
+                target_size: Size::new(Val::Px(0.), Val::Percent(100.)),
                 content: None,
             },
         ],
@@ -87,19 +91,19 @@ fn setup(
             // bottom left corner
             Patch {
                 original_size: IVec2::new(10, 10),
-                target_size: Size::new(Val::Undefined, Val::Undefined),
+                target_size: Size::new(Val::Px(0.), Val::Px(0.)),
                 content: None,
             },
             // bottom middle. This patch width can grow
             Patch {
                 original_size: IVec2::new(-20, 10),
-                target_size: Size::new(Val::Percent(100.), Val::Undefined),
+                target_size: Size::new(Val::Percent(100.), Val::Px(0.)),
                 content: None,
             },
             // bottom right corner
             Patch {
                 original_size: IVec2::new(10, 10),
-                target_size: Size::new(Val::Undefined, Val::Undefined),
+                target_size: Size::new(Val::Px(0.), Val::Px(0.)),
                 content: None,
             },
         ],
@@ -113,7 +117,8 @@ fn setup(
                 margin: UiRect::all(Val::Auto),
                 justify_content: JustifyContent::Center,
                 align_items: AlignItems::Center,
-                size: Size::new(Val::Px(900.), Val::Px(600.)),
+                width: Val::Px(900.),
+                height: Val::Px(600.),
                 ..Default::default()
             },
             nine_patch_data: NinePatchData {
@@ -165,7 +170,8 @@ fn set_content(
                                     margin: UiRect::all(Val::Auto),
                                     justify_content: JustifyContent::Center,
                                     align_items: AlignItems::Center,
-                                    size: Size::new(Val::Px(850.), Val::Px(550.)),
+                                    width: Val::Px(850.),
+                                    height: Val::Px(550.),
                                     ..Default::default()
                                 },
                                 nine_patch_data: NinePatchData {
@@ -194,7 +200,7 @@ fn set_content(
                             )
                             .with_style(Style {
                                 margin: UiRect {
-                                    left: Val::Undefined,
+                                    left: Val::Px(0.),
                                     right: Val::Auto,
                                     top: Val::Px(8.),
                                     bottom: Val::Auto,
@@ -225,7 +231,8 @@ fn set_content(
                                         top: Val::Auto,
                                         bottom: Val::Px(0.),
                                     },
-                                    size: Size::new(Val::Px(300.), Val::Px(80.)),
+                                    width: Val::Px(300.),
+                                    height: Val::Px(80.),
 
                                     justify_content: JustifyContent::Center,
                                     align_items: AlignItems::Center,
@@ -256,7 +263,8 @@ fn set_content(
                                     },
                                     justify_content: JustifyContent::Center,
                                     align_items: AlignItems::Center,
-                                    size: Size::new(Val::Px(300.), Val::Px(80.)),
+                                    width: Val::Px(300.),
+                                    height: Val::Px(80.),
                                     ..Default::default()
                                 },
                                 nine_patch_data: NinePatchData {
@@ -330,7 +338,7 @@ fn set_content(
     }
 }
 
-#[derive(Clone, PartialEq, Eq, std::hash::Hash)]
+#[derive(Clone, PartialEq, Eq, std::hash::Hash, TypePath)]
 enum Content {
     Title,
     Content,
@@ -351,15 +359,15 @@ fn update_size(time: Res<Time>, mut query: Query<(&mut Style, &UiElement)>) {
 
         match panel {
             UiElement::Panel => {
-                style.size.width = Val::Px((900. + 50. * x as f32).ceil());
-                style.size.height = Val::Px((600. + 50. * y as f32).ceil());
+                style.width = Val::Px((900. + 50. * x as f32).ceil());
+                style.height = Val::Px((600. + 50. * y as f32).ceil());
             }
             UiElement::InnerPanel => {
-                style.size.width = Val::Px((850. + 50. * x as f32).ceil());
-                style.size.height = Val::Px((550. + 50. * y as f32).ceil());
+                style.width = Val::Px((850. + 50. * x as f32).ceil());
+                style .height = Val::Px((550. + 50. * y as f32).ceil());
             }
-            UiElement::ButtonOK => style.size.width = Val::Px((300. + 50. * x as f32).ceil()),
-            UiElement::ButtonCancel => style.size.height = Val::Px((90. + 10. * y as f32).ceil()),
+            UiElement::ButtonOK => style.width = Val::Px((300. + 50. * x as f32).ceil()),
+            UiElement::ButtonCancel => style.height = Val::Px((90. + 10. * y as f32).ceil()),
         }
     }
 }

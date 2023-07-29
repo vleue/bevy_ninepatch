@@ -4,12 +4,14 @@ use bevy_ninepatch::{NinePatchBuilder, NinePatchBundle, NinePatchData, NinePatch
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     App::default()
-        .add_plugins(DefaultPlugins)
-        // Add the `NinePatchPlugin` plugin
-        .add_plugin(NinePatchPlugin::<()>::default())
-        .add_startup_system(setup)
+        .add_plugins((
+            DefaultPlugins,
+            // Add the `NinePatchPlugin` plugin
+            NinePatchPlugin::<()>::default(),
+        ))
+        .add_systems(Startup, setup)
         // this system will change the size depending on time elapsed since startup
-        .add_system(update_size)
+        .add_systems(Update, update_size)
         .run();
 
     Ok(())
@@ -33,7 +35,8 @@ fn setup(
                 margin: UiRect::all(Val::Auto),
                 justify_content: JustifyContent::Center,
                 align_items: AlignItems::Center,
-                size: Size::new(Val::Px(50.), Val::Px(50.)),
+                width: Val::Px(50.),
+                height: Val::Px(50.),
                 ..Default::default()
             },
             nine_patch_data: NinePatchData {
@@ -53,7 +56,7 @@ fn update_size(time: Res<Time>, mut query: Query<&mut Style, With<NinePatchData<
     for mut style in query.iter_mut() {
         let (x, y) = time.elapsed_seconds().sin_cos();
 
-        style.size.width = Val::Px((250. + 200. * x as f32).ceil());
-        style.size.height = Val::Px((250. + 200. * y as f32).ceil());
+        style.width = Val::Px((250. + 200. * x as f32).ceil());
+        style.height = Val::Px((250. + 200. * y as f32).ceil());
     }
 }
